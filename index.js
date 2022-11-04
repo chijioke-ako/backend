@@ -10,6 +10,9 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 
+//Allow origin Access origin and method
+app.use(cors({ origin: true, credentials: true, optionsSuccessStatus: 200 }));
+
 app.use(express.json());
 app.use(morgan("dev"));
 // parse application/json
@@ -21,13 +24,6 @@ app.use("/uploads", express.static("uploads"));
 app.use(function (err, res, req, next) {
   res.status(err.status).send(err);
 });
-
-// app.get("/api", async (req, res) => {
-//   pool.query("SELECT * FROM test_t", (err, result) => {
-//     if (err) throw err;
-//     res.send(result.rows[0]);
-//   });
-// });
 
 app.get("/db", async (req, res) => {
   try {
