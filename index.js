@@ -29,6 +29,17 @@ app.use(function (err, res, req, next) {
 //   });
 // });
 
+app.get("/db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM test");
+    const results = { results: result ? result.rows : null };
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+});
+
 app.get("/", async (req, res) => {
   res.send("hello world !");
 });
