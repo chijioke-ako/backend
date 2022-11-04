@@ -1,7 +1,7 @@
- CREATE DATABASE teqbridgeltddb;
+--  CREATE DATABASE teqbridgeltddb;
 
 
- CREATE TABLE test_t(
+ CREATE TABLE test(
      id BIGSERIAL NOT NULL,
      name VARCHAR(255) DEFAULT NULL);
 
