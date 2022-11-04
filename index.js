@@ -6,12 +6,34 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const pool = require("./db");
 
+const Mail = require("./Routers/Mail");
+
 const PORT = process.env.PORT || 5000;
 
 const app = express();
 
 //Allow origin Access origin and method
 app.use(cors({ origin: true, credentials: true, optionsSuccessStatus: 200 }));
+
+// app.use(
+//   session({
+//     key: "userId",
+//     secret: "keyboard cat",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {  expires: 60 * 60 * 24 }
+//   })
+app.use(
+  session({
+    key: "userId",
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 60 * 60 * 24,
+    },
+  })
+);
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -39,6 +61,22 @@ app.get("/db", async (req, res) => {
 app.get("/", async (req, res) => {
   res.send("hello world !");
 });
+
+app.use("/partners", require("./Routers/Partnerts"));
+app.use("/publications", require("./Routers/Publication"));
+app.use("/lastPublications", require("./Routers/pub"));
+app.use("/archives", require("./Routers/Archment"));
+app.use("/resumes", require("./Routers/resume"));
+app.use("/api", Mail);
+app.use("/mail", require("./Routers/mailContact"));
+app.use("/contact", require("./Routers/Contact"));
+app.use("/pcms", require("./Routers/Pcms"));
+app.use("/openbravo", require("./Routers/Openbravo"));
+app.use("/download", require("./Routers/download"));
+app.use("/auth", require("./Routers/jwtAuth"));
+app.use("/dashboard", require("./Routers/Dashbroad"));
+app.use("/admin", require("./Routers/Admin"));
+app.use("/users", require("./Routers/users"));
 
 app.listen(PORT, () => {
   console.log(`Server is started ${PORT}`);
