@@ -15,13 +15,13 @@ const app = express();
 
 //Allow origin Access origin and method
 app.use(cors({ origin: true, credentials: true, optionsSuccessStatus: 200 }));
-
+app.set("trust proxy", 1);
 app.use(
   session({
     key: "userId",
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       expires: 60 * 60 * 24,
     },
@@ -33,7 +33,7 @@ app.use(morgan("dev"));
 // parse application/json
 app.use(bodyParser.json({ extended: true }));
 app.use(cookieParser());
-
+app.use("/uploads", express.static("uploads"));
 app.use("/uploads", express.static("uploads"));
 
 app.use(function (err, res, req, next) {
