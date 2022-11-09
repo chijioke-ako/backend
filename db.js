@@ -10,7 +10,6 @@ const pool = new Pool({
 
   ssl: { rejectUnauthorized: false },
 });
-// console.log(process.env.DATABASE_URL);
 
 module.exports = pool;
 // const pool = new Pool({

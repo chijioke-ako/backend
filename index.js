@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -15,18 +16,10 @@ const app = express();
 //Allow origin Access origin and method
 app.use(cors({ origin: true, credentials: true, optionsSuccessStatus: 200 }));
 
-// app.use(
-//   session({
-//     key: "userId",
-//     secret: "keyboard cat",
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {  expires: 60 * 60 * 24 }
-//   })
 app.use(
   session({
     key: "userId",
-    secret: "keyboard cat",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
