@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const pool = require("../db");
 const multer = require("multer");
+const authenticate = require("../middleware/authorizition");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

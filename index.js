@@ -16,6 +16,11 @@ const app = express();
 //Allow origin Access origin and method
 app.use(cors({ origin: true, credentials: true, optionsSuccessStatus: 200 }));
 app.set("trust proxy", 1);
+
+const { NODE_ENV = "development" } = process.env;
+
+const IN_PROD = NODE_ENV === "production";
+
 app.use(
   session({
     key: "userId",
@@ -23,7 +28,12 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
+      path: "/",
+      httpOnly: true,
+      maxAge: 60 * 60 * 60,
       expires: 60 * 60 * 24,
+      sameSite: true,
+      secure: IN_PROD,
     },
   })
 );
@@ -36,9 +46,9 @@ app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 app.use("/uploads", express.static("uploads"));
 
-app.use(function (err, res, req, next) {
-  res.status(err.status).send(err);
-});
+// app.use(function (err, res, req, next) {
+//   res.status(err.status).send(err);
+// });
 
 app.get("/db", async (req, res) => {
   try {
@@ -68,8 +78,8 @@ app.use("/openbravo", require("./Routers/Openbravo"));
 app.use("/download", require("./Routers/download"));
 app.use("/auth", require("./Routers/jwtAuth"));
 app.use("/dashboard", require("./Routers/Dashbroad"));
-app.use("/admin", require("./Routers/Admin"));
 app.use("/users", require("./Routers/users"));
+app.use("/restPassword", require("./Routers/Forgot_password"));
 
 app.listen(PORT, () => {
   console.log(`Server is started ${PORT}`);

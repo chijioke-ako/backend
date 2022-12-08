@@ -43,7 +43,7 @@ const upload = multer({
 
 router.get("/", function (req, res, next) {
   res.download(
-    "./uploads/2022-09-25T13-16-33.757Z-Chijioke's Laptop Spec.pdf",
+    "./uploads/2022-12-01T08-37-59.001Z-Chijioke's Laptop Spec.pdf",
     function (err) {
       if (err) {
         next(err);
@@ -51,5 +51,11 @@ router.get("/", function (req, res, next) {
     }
   );
 });
+
+// router.get("/", (req, res, next) => {
+//   filePath = path.join(__dirname, "../uploads") + "/" + req.body.filename;
+//   console.log(filePath);
+//   // res.sendFile(filePath);
+// });
 
 module.exports = router;
