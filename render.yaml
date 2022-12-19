@@ -8,7 +8,7 @@ databases:
    name: pgbouncer
    env: docker
    plan: standard
-   repo: https://github.com/render-oss/docker-pgbouncer
+   repo: https://github.com/chijioke-ako/backend
    envVars:
    - key: postgres://backend_app_user:JhPsqpmI4LuuSk3KPkVohAzdceERv04n@dpg-ceg61382i3mum5ococ8g-a/backend_app
      fromDatabase:
