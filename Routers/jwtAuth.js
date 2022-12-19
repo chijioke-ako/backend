@@ -3,7 +3,6 @@ const pool = require('../db');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-const jwtGenerator = require('../middleware/jwtGenerator');
 const authenticate = require('../middleware/authorizition');
 
 const jwt = require('jsonwebtoken');
@@ -17,7 +16,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', authenticate, (req, res) => {
   const { firstname, lastname, email, password, role } = req.body;
 
   if (!email || !password)
@@ -54,7 +53,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { firstname, lastname, email, password, role } = req.body;
+  const { email, password } = req.body;
 
   pool.query(
     'SELECT * FROM users WHERE email = $1 ',
@@ -74,7 +73,7 @@ router.post('/login', async (req, res) => {
             const token = jwt.sign({ id, role }, process.env.JWTSECRET, {
               expiresIn: '1h',
             });
-            req.session.user = result.rows[0];
+            // req.session.user = result.rows[0];
 
             res.status(201).json({
               status: 'Login Successfully ! ',
@@ -119,26 +118,17 @@ router.get('/admin', authenticate, (req, res) => {
 });
 
 router.get('/logout', function (req, res) {
-  if (req.session) {
-    // console.log(req.session);
-    // delete session object
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
-      } else {
-        return res.redirect('/');
-      }
-    });
-  }
+  // if (req.session) {
+  //   // console.log(req.session);
+  //   // delete session object
+  //   req.session.destroy(function (err) {
+  //     if (err) {
+  //       return next(err);
+  //     } else {
+  //       return res.redirect('/');
+  //     }
+  //   });
+  // }
 });
-
-// router.get('/logout', (req, res) => {
-//   req.session.destroy();
-//   res.clearCookie();
-// });
-
-// router.get('/logout', (req, res) => {
-//   res.clearCookie;
-// });
 
 module.exports = router;
