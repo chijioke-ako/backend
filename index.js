@@ -3,8 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-// const cookieParser = require("cookie-parser");
-// const session = require("express-session");
 const pool = require('./db');
 
 const Mail = require('./Routers/Mail');
@@ -17,27 +15,6 @@ const app = express();
 app.use(cors({ origin: true, credentials: true, optionsSuccessStatus: 200 }));
 app.set('trust proxy', 1);
 
-// const { NODE_ENV = "development" } = process.env;
-
-// const IN_PROD = NODE_ENV === "production";
-
-// app.use(
-//   session({
-//     key: "userId",
-//     secret: process.env.SECRET,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: {
-//       path: "/",
-//       httpOnly: true,
-//       maxAge: 60 * 60 * 60,
-//       expires: 60 * 60 * 24,
-//       sameSite: true,
-//       secure: IN_PROD,
-//     },
-//   })
-// );
-
 app.use(express.json());
 app.use(morgan('dev'));
 // parse application/json
@@ -45,10 +22,6 @@ app.use(bodyParser.json({ extended: true }));
 // app.use(cookieParser());
 app.use('/uploads', express.static('uploads'));
 app.use('/uploads', express.static('uploads'));
-
-// app.use(function (err, res, req, next) {
-//   res.status(err.status).send(err);
-// });
 
 app.get('/db', async (req, res) => {
   try {
