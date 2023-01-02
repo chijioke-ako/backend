@@ -17,9 +17,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/register', authenticate, (req, res) => {
-  const { firstname, lastname, email, password, role } = req.body;
+  const { firstname, lastname, email, role, password } = req.body;
 
-  if (!email || !password)
+  if (!firstname || !lastname || !email || !password)
     return res.json({
       error: 'Please enter your email and password ',
     });
@@ -41,6 +41,7 @@ router.post('/register', authenticate, (req, res) => {
 
             (err, results) => {
               if (err) throw err;
+
               return res.json({
                 data: 'user has been registered',
               });
@@ -97,16 +98,12 @@ router.post('/login', async (req, res) => {
   );
 });
 
-router.get('/login', (req, res) => {
-  if (req.session.user) {
-    res.send({ loggedIn: true, user: req.session.user });
+router.get('/verify', authenticate, (req, res) => {
+  if (req.user) {
+    res.send({ loggedIn: true, user: req.user });
   } else {
     res.send({ loggedIn: false });
   }
-});
-
-router.get('/verify', authenticate, (req, res) => {
-  res.json(true);
 });
 
 router.get('/admin', authenticate, (req, res) => {
