@@ -1,27 +1,28 @@
-const router = require("express").Router();
-const pool = require("../db");
-const multer = require("multer");
+const router = require('express').Router();
+const pool = require('../db');
+const multer = require('multer');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads");
+    cb(null, './upload');
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
-    );
+    cb(null, 'pdf');
+    // cb(
+    //   null,
+    //   new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname
+    // );
   },
 });
 
 const fileFilter = (req, file, cb) => {
   if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/jfif" ||
-    file.mimetype === "image/PNG" ||
-    file.mimetype === "application/pdf"
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/jfif' ||
+    file.mimetype === 'image/PNG' ||
+    file.mimetype === 'application/pdf'
   ) {
     cb(null, true);
   } else {
@@ -38,9 +39,9 @@ const upload = multer({
 });
 
 //get resume
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const allResume = await pool.query("SELECT * FROM resume");
+    const allResume = await pool.query('SELECT * FROM resume');
     res.json(allResume.rows);
   } catch (err) {
     console.error(err.message);
@@ -48,11 +49,11 @@ router.get("/", async (req, res) => {
 });
 
 //get all resume
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const Parterts = await pool.query("SELECT * FROM resume WHERE id = $1", [
+    const Parterts = await pool.query('SELECT * FROM resume WHERE id = $1', [
       id,
     ]);
     res.json(Parterts.rows[0]);
@@ -61,20 +62,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", upload.single("resume"), (req, res) => {
+router.post('/', upload.single('resume'), (req, res) => {
   resume = req.file.path;
   const { surname, firstname, email, coverletter } = req.body;
 
   pool.query(
-    "INSERT INTO resume ( surname, firstname, email,  coverletter, resume ) VALUES ( $1, $2, $3, $4, $5 ) RETURNING *",
+    'INSERT INTO resume ( surname, firstname, email,  coverletter, resume ) VALUES ( $1, $2, $3, $4, $5 ) RETURNING *',
     [surname, firstname, email, coverletter, resume],
 
     (err, results) => {
       if (!surname || !firstname || !email || !coverletter) {
-        return res.status(400).json({ msg: "Please fill all fields" });
+        return res.status(400).json({ msg: 'Please fill all fields' });
       } else {
         res.status(201).json({
-          status: "Resume  Submit Successfully !",
+          status: 'Resume  Submit Successfully !',
           data: {
             resumes: results.rows[0],
           },
@@ -85,29 +86,29 @@ router.post("/", upload.single("resume"), (req, res) => {
 });
 
 //put Resume
-router.put("/:id", upload.single("resume"), async (req, res) => {
+router.put('/:id', upload.single('resume'), async (req, res) => {
   try {
     const { id } = req.params;
-    resume = req.file.buffer.toString("base64");
+    resume = req.file.buffer.toString('base64');
     const { surname, firstname, coverletter, email } = req.body;
     const updateResume = await pool.query(
-      "UPDATE resume SET surname=($1), resume=($2), firstname =($3), coverletter=($4), email =($5) WHERE resume_id=($6)",
+      'UPDATE resume SET surname=($1), resume=($2), firstname =($3), coverletter=($4), email =($5) WHERE resume_id=($6)',
       [surname, resume, firstname, coverletter, email, id]
     );
-    res.json("Resume was updated Successfully !");
+    res.json('Resume was updated Successfully !');
   } catch (err) {
     console.error(err.message);
   }
 });
 
 //delete Resume
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const deleteResume = await pool.query("DELETE FROM resume WHERE id= $1", [
+    const deleteResume = await pool.query('DELETE FROM resume WHERE id= $1', [
       id,
     ]);
-    res.json("resume was deleted Successfully !");
+    res.json('resume was deleted Successfully !');
   } catch (err) {
     console.error(err.message);
   }
